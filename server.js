@@ -2,6 +2,7 @@
 // =================================================================
 var express = require("express");
 var path = require("path");
+var fs = require("fs");
 
 // Set up Express
 var app = express();
@@ -19,10 +20,19 @@ app.get("*", function(req, res){
 });
 
 // Sends user to the 'notes.html' page
-app.get("./public/notes", function(req, res){
+app.get("/notes", function(req, res) {
     res.sendFile(path.join(__dirname, "./public/notes.html"));
 });
 
+// Returns all saved notes as JSON
+app.get("/api/notes", function (req, res) {
+    res.sendFile(path.join(__dirname, "./db/db.json"));
+});
+
+// Receive a note to save on the request body, add it to db.json
+// app.post("/api/notes", function(req, res) {
+//     db.push(req.body);
+// });
 
 
 
