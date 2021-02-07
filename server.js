@@ -3,12 +3,15 @@
 var express = require("express");
 var path = require("path");
 var fs = require("fs");
+var bodyParser = require("body-parser");
+var util = require("util");
 
 // Set up Express
 var app = express();
 var PORT = 3000;
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
+app.use(bodyParser.json());
 
 
 // ROUTES
@@ -31,23 +34,24 @@ app.get("/api/notes", function (req, res) {
 
 // Receive a note to save on the request body, add it to db.json
 app.post("/api/notes", function(req, res) {
+  
+    var savedNotes = fs.readFileSync("./db/db.json", "utf8")
+    console.log("line 39..." + savedNotes);
 
-    var body = JSON.stringify(req.body)
-            // var body = JSON.parse(data)
+    var query = JSON.stringify(req.query);
 
-    fs.appendFile("db/db.json", "\n" + body, (err) => {
+    fs.appendFile("db/db.json", "\n" + query, (err) => {
         if (err) {
             console.error(err);
             return
         } else {
-            console.log("Line 43..." + "\nFile Contents after append:",
+            console.log("\nFile Contents after append:\n",
             fs.readFileSync("db/db.json", "utf8"));
         }
     });
-        console.log("line 47 ran then returned");
+        console.log("line 52 ran then returned");
         return
-    });
-
+});
 
 
 // Start server to begin listening
