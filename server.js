@@ -38,7 +38,8 @@ app.post("/api/notes", function(req, res) {
         } else {
             const file = JSON.parse(data);
             console.log("file=" + file);
-            file.push({"title":"line 44","text":"444444"});
+            const query = req.query;
+            file.push(query);
             const json = JSON.stringify(file);
             console.log("json=" + json);
 
