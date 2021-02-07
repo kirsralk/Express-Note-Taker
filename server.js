@@ -30,11 +30,23 @@ app.get("/api/notes", function (req, res) {
 });
 
 // Receive a note to save on the request body, add it to db.json
-// app.post("/api/notes", function(req, res) {
-//     db.push(req.body);
-// });
+app.post("/api/notes", function(req, res) {
 
+    var body = JSON.stringify(req.body)
+            // var body = JSON.parse(data)
 
+    fs.appendFile("db/db.json", "\n" + body, (err) => {
+        if (err) {
+            console.error(err);
+            return
+        } else {
+            console.log("Line 43..." + "\nFile Contents after append:",
+            fs.readFileSync("db/db.json", "utf8"));
+        }
+    });
+        console.log("line 47 ran then returned");
+        return
+    });
 
 
 
