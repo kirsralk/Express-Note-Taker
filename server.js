@@ -10,14 +10,15 @@ var app = express();
 var PORT = process.env.PORT || 3000;
 app.use(express.urlencoded({ extended: true}));
 app.use(express.json());
+app.use(express.static(__dirname + '/public'));
 
 // ROUTES
 // =================================================================
 
 // Basic route that sends user to the main 'index.html' page
-app.get("*", function(req, res){
-    res.sendFile(path.join(__dirname, "./public/index.html"));
-});
+// app.get("*", function(req, res){
+//     res.sendFile(path.join(__dirname, "./public/index.html"));
+// });
 
 app.get("/", function(req, res){
     res.sendFile(path.join(__dirname, "./public/index.html"));
@@ -42,11 +43,9 @@ app.post("/api/notes", function(req, res) {
             console.log(err);
         } else {
             const file = JSON.parse(data);
-            console.log("file=" + file);
             const query = req.query;
             file.push(query);
             const json = JSON.stringify(file);
-            console.log("json=" + json);
 
             fs.writeFile("db/db.json", json, "utf8", (err) => {
                 if (err) {
@@ -62,6 +61,49 @@ app.post("/api/notes", function(req, res) {
     });
 
 });
+
+// Delete a note from db.json
+// app.delete("/api/notes/:id", function (req, res) {
+
+//     fs.readFile("./db/db.json", "utf8", (err, data) =>{ 
+//         if (err) {
+//             console.log(err)
+//         } else {
+            
+//             let savedNotes = JSON.parse(data);
+//             let noteID = req.params.id;
+//             let newID = 0;
+
+//             console.log(`Deleting note with ID ${noteID}`);
+//             savedNotes = savedNotes.filter(currNote => {
+//                 return currNote.id != noteID;
+//             })
+    
+//             for (currNote of savedNotes) {
+//                 currNote.id = newID.toString();
+//                 newID++;
+//             }
+    
+//     fs.writeFile("./db/db.json", JSON.stringify(savedNotes), (err)=>{
+//         if (err) return console.log(err)
+//     })
+//     res.json(savedNotes); 
+//     });
+// });
+
+//     // console.log (req);
+
+//     fs.readFile("./db/db.json", "utf8", function (err, data) {
+//         if (err) {
+//             console.log(err);
+//         } else {
+//             const file = JSON.parse(data);
+//             console.log(file);
+//             file.delete(file[0]);
+//         }
+//     });
+
+// });
 
 
 // Start server to begin listening
