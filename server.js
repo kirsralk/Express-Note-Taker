@@ -63,47 +63,30 @@ app.post("/api/notes", function(req, res) {
 });
 
 // Delete a note from db.json
-// app.delete("/api/notes/:id", function (req, res) {
+app.delete("/api/notes/:id", function (req, res) {
+    let userJson = require("./db/db.json");
+    let deleteId = req.params.id; //Get the id through req.params.id of the object you are going to delete
+    console.log("deleted id= " + deleteId);
+    let deleteObj = userJson.find(user => user.id == deleteId); // As you have only Id of the object, we want to get the entire object from the array. find() will fetch the object from the array whose id is equal to deleteId and assign it to deleteObj.
+    let deleteIndex = userJson.indexOf(deleteObj); //Find the index of the object fetched from the JSON array.
+    userJson.splice(deleteIndex,1); // Splice/ remove the object from the JSON Array.
+    res.send(deleteObj); // Send the deleted object as response.
+    // console.log(res);
+    console.log(deleteObj);
+    console.log(userJson);
+    const json = JSON.stringify(userJson);
 
-//     fs.readFile("./db/db.json", "utf8", (err, data) =>{ 
-//         if (err) {
-//             console.log(err)
-//         } else {
-            
-//             let savedNotes = JSON.parse(data);
-//             let noteID = req.params.id;
-//             let newID = 0;
+    fs.writeFile("db/db.json", json, "utf8", (err) => {
+        if (err) {
+            console.error(err);
+            return
+        } else {
+            console.log("\nFile Contents after deletion:\n",
+            fs.readFileSync("db/db.json", "utf8"));
+        }
+    });
 
-//             console.log(`Deleting note with ID ${noteID}`);
-//             savedNotes = savedNotes.filter(currNote => {
-//                 return currNote.id != noteID;
-//             })
-    
-//             for (currNote of savedNotes) {
-//                 currNote.id = newID.toString();
-//                 newID++;
-//             }
-    
-//     fs.writeFile("./db/db.json", JSON.stringify(savedNotes), (err)=>{
-//         if (err) return console.log(err)
-//     })
-//     res.json(savedNotes); 
-//     });
-// });
-
-//     // console.log (req);
-
-//     fs.readFile("./db/db.json", "utf8", function (err, data) {
-//         if (err) {
-//             console.log(err);
-//         } else {
-//             const file = JSON.parse(data);
-//             console.log(file);
-//             file.delete(file[0]);
-//         }
-//     });
-
-// });
+});
 
 
 // Start server to begin listening
